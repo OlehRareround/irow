@@ -1,8 +1,7 @@
 const {
-  Markup,
   Scenes: { BaseScene },
 } = require('telegraf');
-const Word = require('../db/models/word');
+const Word = require('../../db/models/word');
 
 const deleteWordScene = new BaseScene('deleteWordScene');
 

@@ -1,7 +1,7 @@
 const {
   Scenes: { BaseScene },
 } = require('telegraf');
-const Word = require('../db/models/word');
+const Word = require('../../db/models/word');
 
 const addWordScene = new BaseScene('addWordScene');
 
