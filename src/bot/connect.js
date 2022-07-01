@@ -1,9 +1,8 @@
+require('dotenv').config();
+
 const { Telegraf } = require('telegraf');
 
-async function initBot(token) {
-  const bot = new Telegraf(token);
-  console.log('Bot initialized');
-  return bot;
-}
+const bot = new Telegraf(process.env.BOT_TOKEN);
+console.log('Bot initialized');
 
-module.exports = { initBot };
+module.exports = bot;

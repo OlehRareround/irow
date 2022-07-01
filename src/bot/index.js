@@ -1,6 +1,7 @@
 require('dotenv').config();
+const bot = require('./connect');
 
-async function startBot(bot) {
+async function startBot() {
   if (process.env.PRODUCTION === 'true') {
     bot.telegram.setWebhook('https://irow-bot.herokuapp.com/new-message');
     bot.startWebhook(`/new-message`, null, process.env.PORT);

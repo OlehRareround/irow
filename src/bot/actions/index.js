@@ -1,13 +1,16 @@
 const Word = require('../../db/models/word');
 const { commands } = require('../../helpers/const');
 const { Markup } = require('telegraf');
+const bot = require('../connect');
+// const agenda = require('../../agenda/initAgenda');
 
-async function initActions(bot) {
+async function initActions() {
   bot.start(async (ctx) => {
     ctx.reply(`Hi, ${ctx.message.from.first_name}! ${commands}`);
     const to = 380580799;
-    const message = 'hello from agenda message 2';
+    const message = 'hello from agenda message 3';
     // await agenda.schedule('today at 06:37pm', 'sendMessage', { to, message });
+    // await agenda.now('sendMessage', { to, message });
   });
 
   bot.help((ctx) => ctx.reply(commands));

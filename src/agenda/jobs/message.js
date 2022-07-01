@@ -1,4 +1,6 @@
-async function defineAgendaJobs(agenda, bot) {
+const bot = require('../../bot/connect');
+
+function defineAgendaJobs(agenda) {
   // Define a "job", an sending function that agenda can execute
   // `job` is an object representing the job that agenda schedules.
   // `job.attrs` contains the raw document that's stored in MongoDB, so

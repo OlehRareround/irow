@@ -1,13 +1,7 @@
-require('dotenv').config();
-const Agenda = require('agenda');
-const { defineAgendaJobs } = require('./jobs/message');
+const agenda = require('./initAgenda');
 
-async function startAgenda(bot) {
+async function startAgenda() {
   try {
-    const agenda = new Agenda({
-      db: { address: process.env.DB_CONFIG, collection: 'jobs' },
-    });
-    defineAgendaJobs(agenda, bot);
     agenda.start();
     console.log('Agenda scheduler started');
     return agenda;
