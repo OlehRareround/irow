@@ -7,7 +7,7 @@ async function startAgenda() {
     return agenda;
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    process.exit(0);
   }
 }
 

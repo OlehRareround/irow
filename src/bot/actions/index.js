@@ -1,5 +1,5 @@
 const Word = require('../../db/models/word');
-const { commands } = require('../../helpers/const');
+const { commands } = require('../helpers');
 const { Markup } = require('telegraf');
 const bot = require('../connect');
 // const agenda = require('../../agenda/initAgenda');
@@ -16,24 +16,24 @@ async function initActions() {
   bot.help((ctx) => ctx.reply(commands));
 
   bot.command('words', (ctx) => {
-    try {
-      ctx.replyWithHTML(
-        'add, delete or view your words',
-        Markup.inlineKeyboard([
-          [
-            Markup.button.callback('add', 'btn_add', false),
-            Markup.button.callback('delete', 'btn_delete', false),
-          ],
-          [
-            Markup.button.callback('viewAll', 'btn_viewAll', false),
-            Markup.button.callback('viewInProcess', 'btn_viewInProcess', false),
-            Markup.button.callback('viewComplete', 'btn_viewComplete', false),
-          ],
-        ]),
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    ctx.replyWithHTML(
+      'add, delete or view your words',
+      Markup.inlineKeyboard([
+        [
+          Markup.button.callback('add', 'btn_add', false),
+          Markup.button.callback('delete', 'btn_delete', false),
+        ],
+        [
+          Markup.button.callback('viewAll', 'btn_viewAll', false),
+          Markup.button.callback('viewInProcess', 'btn_viewInProcess', false),
+          Markup.button.callback('viewComplete', 'btn_viewComplete', false),
+        ],
+      ]),
+    );
+  });
+
+  bot.command('training', (ctx) => {
+    ctx.scene.enter('trainingScene');
   });
 
   bot.action('btn_add', async (ctx) => {

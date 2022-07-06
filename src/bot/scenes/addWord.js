@@ -5,7 +5,7 @@ const Word = require('../../db/models/word');
 
 const addWordScene = new BaseScene('addWordScene');
 
-addWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word:'));
+addWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word (in English):'));
 
 addWordScene.on('text', (ctx) => {
   try {

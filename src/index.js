@@ -1,8 +1,8 @@
 const { connectDB } = require('./db');
-const { startAgenda } = require('./agenda');
 const { initScenes } = require('./bot/scenes');
 const { initActions } = require('./bot/actions');
 const { startBot } = require('./bot');
+const { startAgenda } = require('./agenda');
 
 async function run() {
   await connectDB();

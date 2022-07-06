@@ -20,6 +20,11 @@ const wordSchema = new Schema(
       required: true,
       default: 'In process',
     },
+    stage: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
   },
   { timestamps: true },
 );

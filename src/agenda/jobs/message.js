@@ -1,4 +1,5 @@
 const bot = require('../../bot/connect');
+const Training = require('../../db/models/training');
 
 function defineAgendaJobs(agenda) {
   // Define a "job", an sending function that agenda can execute
@@ -9,7 +10,11 @@ function defineAgendaJobs(agenda) {
 
   agenda.define('sendMessage', async (job) => {
     try {
-      const { to, message } = job.attrs.data;
+      const { to, message, wordId } = job.attrs.data;
+      await (async () => {
+        const training = new Training({ wordId, userId: to });
+        training.save();
+      })();
       await bot.telegram.sendMessage(to, message);
     } catch (err) {
       console.error(err);
