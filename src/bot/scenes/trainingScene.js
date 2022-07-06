@@ -67,6 +67,14 @@ trainingScene.on('text', async (ctx) => {
   const currentDate = new Date();
   let date;
   switch (thisWordStage) {
+    case 1:
+      ctx.reply(reply + '30 minutes');
+      date = currentDate.setMinutes(currentDate.getMinutes() + 30);
+      agenda.schedule(date, 'sendMessage', {
+        to: ctx.message.from.id,
+        wordId: ctx.session.word._id,
+      });
+      break;
     case 2:
       ctx.reply(reply + '3 hours');
       date = currentDate.setHours(currentDate.getHours() + 3);

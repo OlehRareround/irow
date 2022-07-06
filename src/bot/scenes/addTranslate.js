@@ -28,7 +28,7 @@ addTranslateScene.on('text', (ctx) => {
       const currentDate = new Date();
       const date = currentDate.setMinutes(currentDate.getMinutes() + 30);
       ctx.reply(
-        'The word is added to your dictionary. Next repetition after 30 minutes',
+        'The word is added to your dictionary. Next repeating after 30 minutes',
       );
       agenda.schedule(date, 'sendMessage', { to, wordId }); // production
       // agenda.now('sendMessage', { to, wordId }); // dev
