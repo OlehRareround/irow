@@ -17,7 +17,7 @@ deleteWordScene.on('text', async (ctx) => {
       );
       return ctx.scene.leave();
     }
-    Word.remove({ user: userId, text: ctx.message.text }).exec();
+    Word.remove({ user: userId, text: ctx.message.text.toLowerCase() }).exec();
     ctx.reply(`The word "${ctx.message.text}" was deleted`);
     return ctx.scene.leave();
   } catch (err) {
