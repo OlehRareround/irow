@@ -70,10 +70,10 @@ async function initActions() {
 
   bot.action('btn_viewComplete', async (ctx) => {
     const userId = ctx.callbackQuery.from.id.toString();
-    const filter = { user: userId, status: 'CMP' };
-    const InProcess = await Word.find(filter);
+    const filter = { user: userId, status: 'Complete' };
+    const complete = await Word.find(filter);
     const result = [];
-    InProcess.forEach((obj) => {
+    complete.forEach((obj) => {
       result.push(`${obj.text}\n`);
     });
     const message = `** Status: Complete **\n\n${result

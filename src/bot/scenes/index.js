@@ -17,10 +17,12 @@ async function initScenes() {
       deleteWordScene,
       trainingScene,
     ]);
+
     stage.command('cancel', (ctx) => {
       ctx.reply('Operation canceled');
       return ctx.scene.leave();
     });
+
     stage.command('words', async (ctx) => {
       await ctx.scene.leave();
       ctx.replyWithHTML(
@@ -38,6 +40,8 @@ async function initScenes() {
         ]),
       );
     });
+
+    stage.command('training', (ctx) => ctx.scene.enter('trainingScene'));
 
     bot.use(session(), stage.middleware());
 

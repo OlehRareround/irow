@@ -10,12 +10,12 @@ function defineAgendaJobs(agenda) {
 
   agenda.define('sendMessage', async (job) => {
     try {
-      const { to, message, wordId } = job.attrs.data;
+      const { to, wordId } = job.attrs.data;
       await (async () => {
         const training = new Training({ wordId, userId: to });
         training.save();
       })();
-      await bot.telegram.sendMessage(to, message);
+      await bot.telegram.sendMessage(to, 'Time to /training!');
     } catch (err) {
       console.error(err);
       throw new Error(err);
