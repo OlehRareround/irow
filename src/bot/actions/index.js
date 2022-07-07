@@ -84,7 +84,6 @@ async function initActions() {
       console.error(err);
       ctx.reply(`Error: ${err.message}`);
     }
-    //
   });
 
   bot.action('btn_delete', async (ctx) => {

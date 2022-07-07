@@ -32,7 +32,7 @@ addTranslateScene.on('text', (ctx) => {
         const date = currentDate.setMinutes(currentDate.getMinutes() + 15);
         bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
         ctx.reply(
-          'The word is added to your dictionary. Next repeating after 15 minutes',
+          'The word is added to your dictionary. Next repeating after 15 minutes.',
         );
         process.env.PRODUCTION === 'true'
           ? agenda.schedule(date, 'sendMessage', { to, wordId })

@@ -44,7 +44,7 @@ trainingScene.on('text', async (ctx) => {
     const translate = ctx.message.text.toLowerCase();
     let reply;
     if (translate === ctx.session.word.translate) {
-      reply = '*Correct!*';
+      reply = `*Correct\!*`;
       if (thisWordStage < 8) {
         thisWordStage += 1;
         await Word.updateOne(
@@ -63,7 +63,7 @@ trainingScene.on('text', async (ctx) => {
         );
       }
     } else {
-      reply = `*Incorrect!*\nAnswer: ||${ctx.session.word.translate}||`;
+      reply = `*Incorrect\!*\nAnswer: ||${ctx.session.word.translate}||`;
     }
     reply += '\nNext repeating this word after ';
     const currentDate = new Date();
