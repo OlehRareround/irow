@@ -82,6 +82,10 @@ async function initActions() {
     ctx.reply(message);
   });
 
+  bot.on('text', (ctx) => {
+    bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
+  });
+
   bot.action('btn_delete', async (ctx) => {
     ctx.scene.enter('deleteWordScene');
   });
