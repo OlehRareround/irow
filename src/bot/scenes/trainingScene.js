@@ -44,7 +44,7 @@ trainingScene.on('text', async (ctx) => {
     const translate = ctx.message.text.toLowerCase();
     let reply;
     if (translate === ctx.session.word.translate) {
-      reply = `*Correct\!*`;
+      reply = `*Correct\\!*`;
       if (thisWordStage < 8) {
         thisWordStage += 1;
         await Word.updateOne(
@@ -63,14 +63,14 @@ trainingScene.on('text', async (ctx) => {
         );
       }
     } else {
-      reply = `*Incorrect\!*\nAnswer: ||${ctx.session.word.translate}||`;
+      reply = `*Incorrect\\!*\nAnswer: ||${ctx.session.word.translate}||`;
     }
     reply += '\nNext repeating this word after ';
     const currentDate = new Date();
     let date;
     switch (thisWordStage) {
       case 1:
-        ctx.replyWithMarkdownV2(reply + '15 minutes');
+        ctx.replyWithMarkdownV2(reply + '15 minutes.');
         date = currentDate.setMinutes(currentDate.getMinutes() + 15);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -78,7 +78,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 2:
-        ctx.replyWithMarkdownV2(reply + '30 minutes');
+        ctx.replyWithMarkdownV2(reply + '30 minutes.');
         date = currentDate.setMinutes(currentDate.getMinutes() + 30);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -86,7 +86,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 3:
-        ctx.replyWithMarkdownV2(reply + '3 hours');
+        ctx.replyWithMarkdownV2(reply + '3 hours.');
         date = currentDate.setHours(currentDate.getHours() + 3);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -94,7 +94,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 4:
-        ctx.replyWithMarkdownV2(reply + '1 day');
+        ctx.replyWithMarkdownV2(reply + '1 day.');
         date = currentDate.setHours(currentDate.getHours() + 24);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -102,7 +102,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 5:
-        ctx.replyWithMarkdownV2(reply + '5 days');
+        ctx.replyWithMarkdownV2(reply + '5 days.');
         date = currentDate.setHours(currentDate.getHours() + 120);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -118,7 +118,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 7:
-        ctx.replyWithMarkdownV2(reply + '3 month');
+        ctx.replyWithMarkdownV2(reply + '3 month.');
         date = currentDate.setHours(currentDate.getHours() + 2160);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -126,7 +126,7 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 8:
-        ctx.replyWithMarkdownV2(reply + '1 year');
+        ctx.replyWithMarkdownV2(reply + '1 year.');
         date = currentDate.setHours(currentDate.getHours() + 8760);
         agenda.schedule(date, 'sendMessage', {
           to: ctx.message.from.id,
@@ -137,7 +137,7 @@ trainingScene.on('text', async (ctx) => {
         ctx.reply('Congratulations! You learned this word.');
         break;
       default:
-        console.error('Something went wrong with the stages');
+        console.error('Something went wrong with the stages.');
         ctx.reply('Error: Something went wrong with the stages!');
     }
     await Training.updateOne(
@@ -149,7 +149,7 @@ trainingScene.on('text', async (ctx) => {
   } catch (err) {
     console.error(err);
     ctx.reply(`Error: ${err.message}`);
-    ctx.scene.leave();
+    return ctx.scene.leave();
   }
 });
 
