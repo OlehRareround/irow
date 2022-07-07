@@ -10,7 +10,10 @@ deleteWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word for delete:'));
 deleteWordScene.on('text', async (ctx) => {
   try {
     const userId = ctx.message.from.id.toString();
-    const checkWord = await Word.find({ user: userId, text: ctx.message.text });
+    const checkWord = await Word.find({
+      user: userId,
+      text: ctx.message.text.toLowerCase(),
+    });
     if (checkWord.length === 0) {
       ctx.reply(
         `The word "${ctx.message.text}" is not defined. Nothing to delete.`,
