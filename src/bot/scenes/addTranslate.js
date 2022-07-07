@@ -29,7 +29,7 @@ addTranslateScene.on('text', (ctx) => {
         const wordId = thisWord.id;
         const to = userId;
         const currentDate = new Date();
-        const date = currentDate.setMinutes(currentDate.getMinutes() + 30);
+        const date = currentDate.setMinutes(currentDate.getMinutes() + 15);
         bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
         ctx.reply(
           'The word is added to your dictionary. Next repeating after 30 minutes',
