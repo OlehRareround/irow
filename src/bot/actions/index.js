@@ -2,15 +2,10 @@ const Word = require('../../db/models/word');
 const { commands } = require('../helpers');
 const { Markup } = require('telegraf');
 const bot = require('../connect');
-// const agenda = require('../../agenda/initAgenda');
 
 async function initActions() {
   bot.start(async (ctx) => {
     ctx.reply(`Hi, ${ctx.message.from.first_name}! ${commands}`);
-    const to = 380580799;
-    const message = 'hello from agenda message 3';
-    // await agenda.schedule('today at 06:37pm', 'sendMessage', { to, message });
-    // await agenda.now('sendMessage', { to, message });
   });
 
   bot.help((ctx) => ctx.reply(commands));
@@ -82,8 +77,14 @@ async function initActions() {
     ctx.reply(message);
   });
 
-  bot.on('text', (ctx) => {
-    bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
+  bot.on('text', async (ctx) => {
+    try {
+      bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
+    } catch (err) {
+      console.error(err);
+      ctx.reply(`Error: ${err.message}`);
+    }
+    //
   });
 
   bot.action('btn_delete', async (ctx) => {
