@@ -10,7 +10,7 @@ addWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word (in English):'));
 addWordScene.on('text', (ctx) => {
   try {
     const userId = ctx.message.from.id.toString();
-    ctx.session.word = ctx.message.text;
+    ctx.session.word = ctx.message.text.toLowerCase();
     Word.findOne({ user: userId, text: ctx.session.word }, function (err, res) {
       if (err) {
         throw new Error(err);
