@@ -7,25 +7,23 @@ const addWordScene = new BaseScene('addWordScene');
 
 addWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word (in English):'));
 
-addWordScene.on('text', (ctx) => {
+addWordScene.on('text', async (ctx) => {
   try {
     const userId = ctx.message.from.id.toString();
     ctx.session.word = ctx.message.text.toLowerCase();
-    Word.findOne({ user: userId, text: ctx.session.word }, function (err, res) {
-      if (err) {
-        throw new Error(err);
-      } else {
-        if (res) {
-          ctx.reply('The word is already in your dictionary');
-          return ctx.scene.leave();
-        } else {
-          ctx.scene.enter('addTranslateScene');
-        }
-      }
-    });
+    const res = await Word.findOne({
+      user: userId,
+      text: ctx.session.word,
+    }).exec();
+    if (res) {
+      ctx.reply('The word is already in your dictionary');
+      return ctx.scene.leave();
+    } else {
+      return ctx.scene.enter('addTranslateScene');
+    }
   } catch (err) {
     console.log(err);
-    ctx.reply(err.message);
+    ctx.reply('Error, please try again later.');
     return ctx.scene.leave();
   }
 });

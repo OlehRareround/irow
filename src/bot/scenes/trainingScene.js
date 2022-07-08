@@ -29,7 +29,7 @@ trainingScene.enter(async (ctx) => {
     }
   } catch (err) {
     console.error(err);
-    ctx.reply({ error: err.message || err });
+    ctx.reply('Error, please try again later.');
     ctx.session.exit = true;
     return ctx.scene.leave();
   }
@@ -42,7 +42,7 @@ trainingScene.on('text', async (ctx) => {
     }
     let thisWordStage = ctx.session.word.stage;
     const translate = ctx.message.text.toLowerCase();
-    let reply;
+    let reply; // need modify to replyWithHTML
     if (translate === ctx.session.word.translate) {
       reply = `*Correct\\!*`;
       if (thisWordStage < 8) {
@@ -65,6 +65,7 @@ trainingScene.on('text', async (ctx) => {
     } else {
       reply = `*Incorrect\\!*\nAnswer: ||${ctx.session.word.translate}||`;
     }
+
     reply += '\nNext repeating this word after ';
     const currentDate = new Date();
     let date;
@@ -137,18 +138,23 @@ trainingScene.on('text', async (ctx) => {
         ctx.reply('Congratulations! You learned this word.');
         break;
       default:
-        console.error('Something went wrong with the stages.');
-        ctx.reply('Error: Something went wrong with the stages!');
+        console.error(
+          'Something went wrong with the stages, and switched to default',
+        );
+        ctx.reply('Error, please try again later.');
     }
+
     await Training.updateOne(
       { _id: ctx.session.trainingDoc._id },
       { status: 'CMP' },
     );
+
     bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
+
     return ctx.scene.reenter();
   } catch (err) {
     console.error(err);
-    ctx.reply(`Error: ${err.message}`);
+    ctx.reply('Error, please try again later.');
     return ctx.scene.leave();
   }
 });

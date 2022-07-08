@@ -18,7 +18,6 @@ function defineAgendaJobs(agenda) {
       await bot.telegram.sendMessage(to, 'Time to /training!');
     } catch (err) {
       console.error(err);
-      throw new Error(err);
     }
   });
 

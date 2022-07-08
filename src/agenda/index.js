@@ -6,8 +6,8 @@ async function startAgenda() {
     console.log('Agenda scheduler started');
     return agenda;
   } catch (err) {
-    console.log(err);
-    process.exit(0);
+    console.error(err);
+    process.exit(1);
   }
 }
 
