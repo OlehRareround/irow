@@ -1,10 +1,8 @@
 const commands = `
 /start - reboot bot
-/help - for more information
+/help - view commands
 /words - manage your words
-/training - to start training
-/cancel - for cancel current operation
-
-`;
+/training - start training
+/cancel - cancel current operation`;
 
 module.exports = { commands };

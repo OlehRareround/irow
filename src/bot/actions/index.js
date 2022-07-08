@@ -1,36 +1,20 @@
 const Word = require('../../db/models/word');
 const { commands } = require('../helpers');
-const { Markup } = require('telegraf');
 const bot = require('../connect');
 
 async function initActions() {
   try {
     bot.start(async (ctx) => {
-      ctx.reply(`Hi, ${ctx.message.from.first_name}! ${commands}`);
-    });
-
-    bot.help((ctx) => ctx.reply(commands));
-
-    bot.command('words', (ctx) => {
-      ctx.replyWithHTML(
-        'add, delete or view your words',
-        Markup.inlineKeyboard([
-          [
-            Markup.button.callback('add', 'btn_add', false),
-            Markup.button.callback('delete', 'btn_delete', false),
-          ],
-          [
-            Markup.button.callback('viewAll', 'btn_viewAll', false),
-            Markup.button.callback('viewInProcess', 'btn_viewInProcess', false),
-            Markup.button.callback('viewComplete', 'btn_viewComplete', false),
-          ],
-        ]),
+      ctx.replyWithMarkdown(
+        `Привіт, *${ctx.message.from.first_name}*!` +
+          '\n\nЯ допомагаю вчити англійські слова використовуючи метод інтервальних повторень.' +
+          '\n\nЯк тільки ти правильно відповідаєш, слово переходить на наступну ітерацію. Всього ітерацій 8.' +
+          '\nПерша ітерація через 15хв, друга через 30хв, далі через 3 години, 1 день, 5 днів, 25 днів, 3 місяці і остання через рік.' +
+          '\n\nЩоб переглянути доступні команди натискай /help',
       );
     });
 
-    bot.command('training', (ctx) => {
-      ctx.scene.enter('trainingScene');
-    });
+    bot.help((ctx) => ctx.reply(commands));
 
     bot.action('btn_add', async (ctx) => {
       await ctx.scene.enter('addWordScene');

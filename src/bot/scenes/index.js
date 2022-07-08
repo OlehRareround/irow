@@ -24,19 +24,25 @@ async function initScenes() {
     });
 
     stage.command('words', async (ctx) => {
-      await ctx.scene.leave();
+      if (typeof ctx.session?.__scenes === 'object') {
+        await ctx.scene.leave();
+      }
       ctx.replyWithHTML(
-        'add, delete or view your words',
+        'Words collection settings',
         Markup.inlineKeyboard([
           [
             Markup.button.callback('add', 'btn_add', false),
             Markup.button.callback('delete', 'btn_delete', false),
           ],
           [
-            Markup.button.callback('viewAll', 'btn_viewAll', false),
-            Markup.button.callback('viewInProcess', 'btn_viewInProcess', false),
-            Markup.button.callback('viewComplete', 'btn_viewComplete', false),
+            Markup.button.callback(
+              'view InProcess',
+              'btn_viewInProcess',
+              false,
+            ),
+            Markup.button.callback('view Complete', 'btn_viewComplete', false),
           ],
+          [Markup.button.callback('view all', 'btn_viewAll', false)],
         ]),
       );
     });
