@@ -64,6 +64,13 @@ trainingScene.on('text', async (ctx) => {
       }
     } else {
       reply = `*Incorrect\\!*\nAnswer: ||${ctx.session.word.translate}||`;
+      thisWordStage = 1;
+      await Word.updateOne(
+        {
+          _id: ctx.session.word._id,
+        },
+        { stage: thisWordStage },
+      );
     }
 
     reply += '\nNext repeating this word after ';
