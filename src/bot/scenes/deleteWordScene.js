@@ -3,6 +3,7 @@ const {
 } = require('telegraf');
 const Word = require('../../db/models/word');
 const Training = require('../../db/models/training');
+const Job = require('../../db/models/job');
 
 const deleteWordScene = new BaseScene('deleteWordScene');
 
@@ -24,6 +25,12 @@ deleteWordScene.on('text', async (ctx) => {
     } else {
       await Word.deleteOne({ user, text });
       await Training.deleteMany({ userId: user, wordId: checkWord._id });
+      await Job.deleteMany({
+        $and: [
+          { 'data.to': user },
+          { 'data.wordId': checkWord._id.toString() },
+        ],
+      });
       ctx.reply(`The word "${text}" was deleted.`);
       return ctx.scene.leave();
     }
