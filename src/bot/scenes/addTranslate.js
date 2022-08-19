@@ -5,11 +5,12 @@ const {
 const Word = require('../../db/models/word');
 const agenda = require('../../agenda/initAgenda');
 const bot = require('../../bot/connect');
+const { messages } = require('../../consts/bot.messages');
 
 const addTranslateScene = new BaseScene('addTranslateScene');
 
 addTranslateScene.enter((ctx) =>
-  ctx.replyWithHTML('Enter the translate (in Ukrainian):'),
+  ctx.replyWithHTML(messages.addTranslateScene.enter),
 );
 
 addTranslateScene.on('text', async (ctx) => {
@@ -27,16 +28,14 @@ addTranslateScene.on('text', async (ctx) => {
     const currentDate = new Date();
     const date = currentDate.setMinutes(currentDate.getMinutes() + 15);
     bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
-    ctx.reply(
-      'The word is added to your dictionary. Next repeating after 15 minutes.',
-    );
+    ctx.reply(messages.addTranslateScene.complete);
     process.env.PRODUCTION === 'true'
       ? agenda.schedule(date, 'sendMessage', { to, wordId })
       : agenda.now('sendMessage', { to, wordId });
     ctx.scene.leave();
   } catch (err) {
     console.error(err);
-    ctx.reply('Error, please try again later.');
+    ctx.reply(messages.error);
     return ctx.scene.leave();
   }
 });

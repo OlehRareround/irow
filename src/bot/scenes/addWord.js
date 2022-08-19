@@ -2,12 +2,11 @@ const {
   Scenes: { BaseScene },
 } = require('telegraf');
 const Word = require('../../db/models/word');
+const { messages } = require('../../consts/bot.messages');
 
 const addWordScene = new BaseScene('addWordScene');
 
-addWordScene.enter((ctx) =>
-  ctx.replyWithHTML('Enter the word (in English):\nYou can adding phrases.'),
-);
+addWordScene.enter((ctx) => ctx.replyWithHTML(messages.addWordScene.enter));
 
 addWordScene.on('text', async (ctx) => {
   try {
@@ -18,14 +17,13 @@ addWordScene.on('text', async (ctx) => {
       text: ctx.session.word,
     }).exec();
     if (res) {
-      ctx.reply('The word is already in your dictionary');
+      ctx.reply(messages.addWordScene.incorrectWord);
       return ctx.scene.leave();
-    } else {
-      return ctx.scene.enter('addTranslateScene');
     }
+    return ctx.scene.enter('addTranslateScene');
   } catch (err) {
     console.log(err);
-    ctx.reply('Error, please try again later.');
+    ctx.reply(messages.error);
     return ctx.scene.leave();
   }
 });

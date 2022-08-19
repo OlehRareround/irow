@@ -5,6 +5,7 @@ const Word = require('../../db/models/word');
 const agenda = require('../../agenda/initAgenda');
 const Training = require('../../db/models/training');
 const bot = require('../connect');
+const { messages } = require('../../consts/bot.messages');
 
 const trainingScene = new BaseScene('trainingScene');
 
@@ -15,21 +16,21 @@ trainingScene.enter(async (ctx) => {
       userId,
       status: 'ACT',
     }).exec();
+    let message = '';
     if (!ctx.session.trainingDoc) {
-      ctx.reply('Your dictionary is empty.\nPlease add /words!');
+      message = messages.trainingScene.enter.cancel;
+      ctx.reply(message);
       return (ctx.session.exit = true);
-    } else {
-      ctx.session.exit = false;
-      ctx.session.word = await Word.findById({
-        _id: ctx.session.trainingDoc.wordId,
-      });
-      ctx.reply(
-        `Enter the translation (in Ukrainian)!\nWord: ${ctx.session.word.text}`,
-      );
     }
+    ctx.session.exit = false;
+    ctx.session.word = await Word.findById({
+      _id: ctx.session.trainingDoc.wordId,
+    });
+    message = messages.trainingScene.enter.ok(ctx.session.word.text);
+    ctx.reply(message);
   } catch (err) {
     console.error(err);
-    ctx.reply('Error, please try again later.');
+    ctx.reply(messages.error);
     ctx.session.exit = true;
     return ctx.scene.leave();
   }
@@ -42,9 +43,9 @@ trainingScene.on('text', async (ctx) => {
     }
     let thisWordStage = ctx.session.word.stage;
     const translate = ctx.message.text.toLowerCase();
-    let reply; // need modify to replyWithHTML
+    let reply;
     if (translate === ctx.session.word.translate) {
-      reply = `*Correct\\!*`;
+      reply = messages.trainingScene.correct;
       if (thisWordStage < 8) {
         thisWordStage += 1;
         await Word.updateOne(
@@ -63,7 +64,7 @@ trainingScene.on('text', async (ctx) => {
         );
       }
     } else {
-      reply = `*Incorrect\\!*\nAnswer: ||${ctx.session.word.translate}||`;
+      reply = messages.trainingScene.incorrect(ctx.session.word.translate);
       thisWordStage = 1;
       await Word.updateOne(
         {
@@ -73,7 +74,7 @@ trainingScene.on('text', async (ctx) => {
       );
     }
 
-    reply += '\nNext repeating this word after ';
+    reply += messages.trainingScene.nextRepeat;
     const currentDate = new Date();
     let date;
     switch (thisWordStage) {
@@ -142,13 +143,13 @@ trainingScene.on('text', async (ctx) => {
         });
         break;
       case 88:
-        ctx.reply('Congratulations! You learned this word.');
+        ctx.reply(messages.trainingScene.congratulations);
         break;
       default:
         console.error(
           'Something went wrong with the stages, and switched to default',
         );
-        ctx.reply('Error, please try again later.');
+        ctx.reply(messages.error);
     }
 
     await Training.updateOne(
@@ -161,7 +162,7 @@ trainingScene.on('text', async (ctx) => {
     return ctx.scene.reenter();
   } catch (err) {
     console.error(err);
-    ctx.reply('Error, please try again later.');
+    ctx.reply(messages.error);
     return ctx.scene.leave();
   }
 });

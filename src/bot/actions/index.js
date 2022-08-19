@@ -1,17 +1,12 @@
 const Word = require('../../db/models/word');
-const { commands } = require('../helpers');
+const { commands } = require('../../consts/bot.commands');
 const bot = require('../connect');
+const { messages } = require('../../consts/bot.messages');
 
 async function initActions() {
   try {
     bot.start(async (ctx) => {
-      ctx.replyWithMarkdown(
-        `Привіт, *${ctx.message.from.first_name}*!` +
-          '\n\nЯ допомагаю вчити англійські слова використовуючи метод інтервальних повторень.' +
-          '\n\nЯк тільки ти правильно відповідаєш, слово переходить на наступну ітерацію. Всього ітерацій 8.' +
-          '\nПерша ітерація через 15хв, друга через 30хв, далі через 3 години, 1 день, 5 днів, 25 днів, 3 місяці і остання через рік.' +
-          '\n\nЩоб переглянути доступні команди натискай /help',
-      );
+      ctx.replyWithMarkdown(messages.start(ctx.message.from.first_name));
     });
 
     bot.help((ctx) => ctx.reply(commands));
@@ -21,44 +16,41 @@ async function initActions() {
     });
 
     bot.action('btn_viewAll', async (ctx) => {
-      const userId = ctx.callbackQuery.from.id.toString();
-      const filter = { user: userId };
+      const status = 'All';
+      const user = ctx.callbackQuery.from.id.toString();
+      const filter = { user };
       const all = await Word.find(filter);
-      const result = [];
+      const words = [];
       all.forEach((obj) => {
-        result.push(`${obj.text}\n`);
+        words.push(`${obj.text}\n`);
       });
-      const message = `** Status: all **\n\n${result
-        .toString()
-        .replace(/,/g, '')}\n** Count: ${result.length} **`;
+      const message = messages.wordsInfo(words, status);
       ctx.reply(message);
     });
 
     bot.action('btn_viewInProcess', async (ctx) => {
-      const userId = ctx.callbackQuery.from.id.toString();
-      const filter = { user: userId, status: 'In process' };
-      const InProcess = await Word.find(filter);
-      const result = [];
-      InProcess.forEach((obj) => {
-        result.push(`${obj.text}\n`); // need add next repeating;
+      const status = 'In process';
+      const user = ctx.callbackQuery.from.id.toString();
+      const filter = { user, status };
+      const inProcess = await Word.find(filter);
+      const words = [];
+      inProcess.forEach((obj) => {
+        words.push(`${obj.text}\n`);
       });
-      const message = `** Status: In Process **\n\n${result
-        .toString()
-        .replace(/,/g, '')}\n** Count: ${result.length} **`;
+      const message = messages.wordsInfo(words, status);
       ctx.reply(message);
     });
 
     bot.action('btn_viewComplete', async (ctx) => {
-      const userId = ctx.callbackQuery.from.id.toString();
-      const filter = { user: userId, status: 'Complete' };
+      const status = 'Complete';
+      const user = ctx.callbackQuery.from.id.toString();
+      const filter = { user, status };
       const complete = await Word.find(filter);
-      const result = [];
+      const words = [];
       complete.forEach((obj) => {
-        result.push(`${obj.text}\n`);
+        words.push(`${obj.text}\n`);
       });
-      const message = `** Status: Complete **\n\n${result
-        .toString()
-        .replace(/,/g, '')}\n** Count: ${result.length} **`;
+      const message = messages.wordsInfo(words, status);
       ctx.reply(message);
     });
 
@@ -67,7 +59,7 @@ async function initActions() {
         bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
       } catch (err) {
         console.error(err);
-        ctx.reply(`Error: ${err.message}`);
+        ctx.reply(`Error: ${err?.message}`);
       }
     });
 

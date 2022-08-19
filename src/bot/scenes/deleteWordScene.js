@@ -4,10 +4,13 @@ const {
 const Word = require('../../db/models/word');
 const Training = require('../../db/models/training');
 const Job = require('../../db/models/job');
+const { messages } = require('../../consts/bot.messages');
 
 const deleteWordScene = new BaseScene('deleteWordScene');
 
-deleteWordScene.enter((ctx) => ctx.replyWithHTML('Enter the word for delete:'));
+deleteWordScene.enter((ctx) =>
+  ctx.replyWithHTML(messages.deleteWordScene.enter),
+);
 
 deleteWordScene.on('text', async (ctx) => {
   try {
@@ -18,9 +21,8 @@ deleteWordScene.on('text', async (ctx) => {
       text,
     });
     if (!checkWord) {
-      ctx.reply(
-        `The word "${text}" is not defined. Nothing to delete (In English).`,
-      );
+      const message = messages.deleteWordScene.incorrectWord(text);
+      ctx.reply(message);
       return ctx.scene.leave();
     } else {
       await Word.deleteOne({ user, text });
@@ -31,12 +33,13 @@ deleteWordScene.on('text', async (ctx) => {
           { 'data.wordId': checkWord._id.toString() },
         ],
       });
-      ctx.reply(`The word "${text}" was deleted.`);
+      const message = messages.deleteWordScene.complete(text);
+      ctx.reply(message);
       return ctx.scene.leave();
     }
   } catch (err) {
     console.error(err);
-    ctx.reply('Error, please try again later.');
+    ctx.reply(messages.error);
     return ctx.scene.leave();
   }
 });
