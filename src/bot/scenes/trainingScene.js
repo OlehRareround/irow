@@ -2,7 +2,7 @@ const {
   Scenes: { BaseScene },
 } = require('telegraf');
 const Word = require('../../db/models/word');
-const agenda = require('../../agenda/initAgenda');
+const { schedule } = require('../../agenda/jobs/scheduler');
 const Training = require('../../db/models/training');
 const bot = require('../connect');
 const { messages } = require('../../consts/bot.messages');
@@ -81,66 +81,42 @@ trainingScene.on('text', async (ctx) => {
       case 1:
         ctx.replyWithMarkdownV2(reply + '15 minutes\\.');
         date = currentDate.setMinutes(currentDate.getMinutes() + 15);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 2:
         ctx.replyWithMarkdownV2(reply + '30 minutes\\.');
         date = currentDate.setMinutes(currentDate.getMinutes() + 30);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 3:
         ctx.replyWithMarkdownV2(reply + '3 hours\\.');
         date = currentDate.setHours(currentDate.getHours() + 3);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 4:
         ctx.replyWithMarkdownV2(reply + '1 day\\.');
         date = currentDate.setHours(currentDate.getHours() + 24);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 5:
         ctx.replyWithMarkdownV2(reply + '5 days\\.');
         date = currentDate.setHours(currentDate.getHours() + 120);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 6:
         ctx.replyWithMarkdownV2(reply + '25 days\\.');
         date = currentDate.setHours(currentDate.getHours() + 600);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 7:
         ctx.replyWithMarkdownV2(reply + '3 month\\.');
         date = currentDate.setHours(currentDate.getHours() + 2160);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 8:
         ctx.replyWithMarkdownV2(reply + '1 year\\.');
         date = currentDate.setHours(currentDate.getHours() + 8760);
-        agenda.schedule(date, 'sendMessage', {
-          to: ctx.message.from.id,
-          wordId: ctx.session.word._id,
-        });
+        schedule.sendMessage(date, ctx.message.from.id, ctx.session.word._id);
         break;
       case 88:
         ctx.reply(messages.trainingScene.congratulations);

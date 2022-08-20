@@ -1,9 +1,8 @@
-require('dotenv').config();
 const {
   Scenes: { BaseScene },
 } = require('telegraf');
 const Word = require('../../db/models/word');
-const agenda = require('../../agenda/initAgenda');
+const { schedule } = require('../../agenda/jobs/scheduler');
 const bot = require('../../bot/connect');
 const { messages } = require('../../consts/bot.messages');
 
@@ -29,9 +28,7 @@ addTranslateScene.on('text', async (ctx) => {
     const date = currentDate.setMinutes(currentDate.getMinutes() + 15);
     bot.telegram.deleteMessage(ctx.message.from.id, ctx.message.message_id);
     ctx.reply(messages.addTranslateScene.complete);
-    process.env.PRODUCTION === 'true'
-      ? agenda.schedule(date, 'sendMessage', { to, wordId })
-      : agenda.now('sendMessage', { to, wordId });
+    schedule.sendMessage(date, to, wordId);
     ctx.scene.leave();
   } catch (err) {
     console.error(err);
