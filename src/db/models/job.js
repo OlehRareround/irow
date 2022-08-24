@@ -6,6 +6,8 @@ const jobSchema = new Schema(
     data: {
       type: Object,
       required: true,
+      to: Number,
+      wordId: String,
     },
   },
   { strict: false },

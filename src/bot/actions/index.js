@@ -1,7 +1,9 @@
 const Word = require('../../db/models/word');
+const Job = require('../../db/models/job');
 const { commands } = require('../../consts/bot.commands');
 const bot = require('../connect');
 const { messages } = require('../../consts/bot.messages');
+const { compare } = require('../helpers');
 
 async function initActions() {
   try {
@@ -25,20 +27,47 @@ async function initActions() {
         words.push(`${obj.text}\n`);
       });
       const message = messages.wordsInfo(words, status);
-      ctx.reply(message);
+      ctx.replyWithMarkdown(message);
     });
 
     bot.action('btn_viewInProcess', async (ctx) => {
       const status = 'In process';
       const user = ctx.callbackQuery.from.id.toString();
+      const dateNow = new Date();
+
       const filter = { user, status };
-      const inProcess = await Word.find(filter);
-      const words = [];
-      inProcess.forEach((obj) => {
-        words.push(`${obj.text}\n`);
+      const wordsInProcess = await Word.find(filter);
+
+      const jobs = await Job.find({
+        'data.to': +user,
+        nextRunAt: { $ne: null },
       });
-      const message = messages.wordsInfo(words, status);
-      ctx.reply(message);
+
+      const sortedWords = [];
+      wordsInProcess.forEach((word) => {
+        const job = jobs.filter(
+          (job) => word._id.toString() === job.data.wordId.toString(),
+        );
+        sortedWords.push({
+          name: word.text,
+          nextRunAt: job[0]?.nextRunAt || dateNow,
+        });
+      });
+
+      sortedWords.sort(compare);
+      sortedWords.forEach((word) =>
+        word.nextRunAt === dateNow
+          ? (word.nextRunAt = 'ACT')
+          : (word.nextRunAt = word.nextRunAt.toLocaleString()),
+      );
+
+      const wordsEntries = [];
+      sortedWords.forEach((word) =>
+        wordsEntries.push(`${word.name} - ${word.nextRunAt}\n`),
+      );
+
+      const message = messages.wordsInfo(wordsEntries, status);
+      ctx.replyWithMarkdown(message);
     });
 
     bot.action('btn_viewComplete', async (ctx) => {
@@ -51,7 +80,7 @@ async function initActions() {
         words.push(`${obj.text}\n`);
       });
       const message = messages.wordsInfo(words, status);
-      ctx.reply(message);
+      ctx.replyWithMarkdown(message);
     });
 
     bot.on('text', async (ctx) => {

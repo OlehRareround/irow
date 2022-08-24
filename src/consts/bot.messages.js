@@ -10,7 +10,16 @@ const start = (userName) => {
 
 const wordsInfo = (words, status) => {
   const wordsInString = words.toString().replace(/,/g, '');
-  return `** Status: ${status} **\n\n${wordsInString}\n** Count: ${words.length} **`;
+  const messHeader = `*Status: ${status}*\n`;
+  let messBody = '';
+  const messFooter = `\n*Count: ${words.length}*`;
+
+  if (status === 'In process') {
+    messBody = `*(word - nextRun)*\n\n${wordsInString}`;
+  } else {
+    messBody = `\n${wordsInString}`;
+  }
+  return messHeader.concat(messBody).concat(messFooter);
 };
 
 const training = 'Time to /training!';
