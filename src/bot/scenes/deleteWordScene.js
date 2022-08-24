@@ -24,19 +24,19 @@ deleteWordScene.on('text', async (ctx) => {
       const message = messages.deleteWordScene.incorrectWord(text);
       ctx.reply(message);
       return ctx.scene.leave();
-    } else {
-      await Word.deleteOne({ user, text });
-      await Training.deleteMany({ userId: user, wordId: checkWord._id });
-      await Job.deleteMany({
-        $and: [
-          { 'data.to': user },
-          { 'data.wordId': checkWord._id.toString() },
-        ],
-      });
-      const message = messages.deleteWordScene.complete(text);
-      ctx.reply(message);
-      return ctx.scene.leave();
     }
+    await Job.deleteMany({
+      'data.to': user,
+      'data.wordId': checkWord._id.toString(),
+    });
+    await Training.deleteMany({
+      userId: user,
+      wordId: checkWord._id.toString(),
+    });
+    await Word.deleteOne({ _id: checkWord._id });
+    const message = messages.deleteWordScene.complete(text);
+    ctx.reply(message);
+    return ctx.scene.leave();
   } catch (err) {
     console.error(err);
     ctx.reply(messages.error);
